@@ -1,0 +1,31 @@
+# Node
+node_modules/
+dist/
+*.tsbuildinfo
+npm-debug.log*
+
+# Rust
+target/
+
+# Stream Deck plugin build output
+apps/streamdeck-plugin/com.dezzer.deezer.sdPlugin/bin/
+apps/streamdeck-plugin/com.dezzer.deezer.sdPlugin/overlay/
+*.streamDeckPlugin
+
+# Spike / diagnostics output
+docs/spike-report*.json
+docs/artwork-sample.*
+
+# Local
+.env
+*.log
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# Documentation
+*no_git.md
+

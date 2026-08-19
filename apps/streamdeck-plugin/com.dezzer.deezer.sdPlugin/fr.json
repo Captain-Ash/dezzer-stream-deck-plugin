@@ -1,0 +1,119 @@
+{
+  "Name": "Dezzer",
+  "Description": "Contrôlez Deezer Desktop depuis votre Stream Deck et affichez le morceau en cours dans OBS. Aucun runtime à installer. Les actions de volume agissent sur le volume de Deezer dans le mixeur Windows, qui se combine avec le volume interne de l'application.",
+  "Category": "Dezzer",
+  "com.dezzer.deezer.play-pause": {
+    "Name": "Play / Pause",
+    "Tooltip": "Bascule la lecture de Deezer Desktop."
+  },
+  "com.dezzer.deezer.next": {
+    "Name": "Piste suivante",
+    "Tooltip": "Passe au titre suivant."
+  },
+  "com.dezzer.deezer.previous": {
+    "Name": "Piste précédente",
+    "Tooltip": "Revient au titre précédent."
+  },
+  "com.dezzer.deezer.volume-up": {
+    "Name": "Volume +",
+    "Tooltip": "Augmente le volume de Deezer dans le mixeur Windows. Ce réglage se combine avec le volume interne de Deezer."
+  },
+  "com.dezzer.deezer.volume-down": {
+    "Name": "Volume -",
+    "Tooltip": "Diminue le volume de Deezer dans le mixeur Windows. Ce réglage se combine avec le volume interne de Deezer."
+  },
+  "com.dezzer.deezer.now-playing": {
+    "Name": "Morceau en cours",
+    "Tooltip": "Affiche la pochette, le titre, l'artiste et la progression. Appuyez pour lire ou mettre en pause."
+  },
+  "com.dezzer.deezer.diagnostics": {
+    "Name": "État Deezer",
+    "Tooltip": "Affiche l'état du service local et de Deezer. Appuyez pour redémarrer le service."
+  },
+  "com.dezzer.deezer.overlay-info": {
+    "Name": "Overlay OBS",
+    "Tooltip": "Ouvre un aperçu de l'overlay et fournit l'URL à coller dans OBS."
+  },
+  "Localization": {
+    "key": {
+      "starting": "Démarrage…",
+      "bridgeOff": "Bridge OFF",
+      "bridgeError": "Bridge KO",
+      "deezerOff": "Deezer OFF",
+      "deezerPlaying": "Deezer\nen lecture",
+      "deezerReady": "Deezer\nprêt",
+      "unsupported": "Non pris\nen charge",
+      "unavailable": "Indisponible",
+      "unavailableShort": "Indispo.",
+      "restarting": "Redémarrage…",
+      "overlay": "Overlay\nOBS"
+    },
+    "diagnostic": {
+      "starting": "Initialisation du service local…",
+      "bridgeStopped": "Le service local est arrêté. Appuyez pour le relancer.",
+      "bridgeFailed": "Impossible de démarrer le composant local.",
+      "deezerOff": "Ouvrez Deezer Desktop puis lancez une piste.",
+      "playing": "Deezer est en lecture.",
+      "paused": "Deezer est prêt (en pause)."
+    },
+    "error": {
+      "unsupported": "Non pris en charge.",
+      "refused": "Commande refusée.",
+      "bridgeStarting": "Service local en cours de démarrage.",
+      "deezerMissing": "Deezer introuvable.",
+      "unreachable": "Service local injoignable."
+    },
+    "pi": {
+      "status": "État",
+      "localService": "Service local",
+      "deezer": "Deezer",
+      "session": "Session",
+      "capabilities": "Capacités",
+      "testConnection": "Tester la connexion",
+      "restartService": "Redémarrer le service",
+      "keys": "Touches",
+      "nowPlayingText": "Texte « en cours »",
+      "formatTitleArtist": "Titre + artiste",
+      "formatTitle": "Titre seul",
+      "formatArtist": "Artiste seul",
+      "artworkOnKeys": "Pochette en fond",
+      "volumeStep": "Pas de volume",
+      "volumeHint": "Les actions Volume agissent sur le curseur de Deezer dans le mixeur Windows, pas dans Deezer. Les deux niveaux se combinent : 50 % de chaque côté donnent 25 % de son.",
+      "overlay": "Overlay OBS",
+      "theme": "Thème",
+      "width": "Largeur (px)",
+      "accent": "Couleur d'accent",
+      "accentPlaceholder": "#a238ff (vide = thème)",
+      "artwork": "Pochette",
+      "album": "Album",
+      "time": "Temps",
+      "waveform": "Waveform",
+      "autoHide": "Masquage auto",
+      "hideAfter": "Après (ms)",
+      "browserSourceUrl": "URL Browser Source",
+      "revealUrl": "Afficher l'URL",
+      "copyUrl": "Copier l'URL",
+      "preview": "Aperçu navigateur",
+      "rotateToken": "Régénérer le jeton",
+      "rotateConfirm": "Régénérer le jeton ? L'URL actuelle cessera de fonctionner : il faudra la recoller dans OBS.",
+      "obsHint": "Dans OBS : ajoutez une source Navigateur, collez l'URL, puis réglez la taille sur 720 × 160. Le port est fixe : l'URL reste valable après un redémarrage.",
+      "diagnosticExport": "Diagnostic exportable",
+      "copyDiagnostic": "Copier le diagnostic",
+      "diagnosticHint": "Ne contient aucun jeton. Collez-le tel quel dans un rapport de bug.",
+      "bridgeReady": "Actif",
+      "bridgeStarting": "Démarrage…",
+      "bridgeStopped": "Arrêté",
+      "bridgeFailed": "En échec",
+      "playerPlaying": "En lecture",
+      "playerPaused": "En pause",
+      "playerMissing": "Non détecté",
+      "serviceUnavailable": "Service local indisponible",
+      "capPlayPause": "Play/Pause",
+      "capNext": "Suivant",
+      "capPrevious": "Précédent",
+      "capStop": "Stop",
+      "capSeek": "Seek",
+      "capVolume": "Volume"
+    }
+  }
+}

@@ -1,0 +1,164 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "com.dezzer.deezer",
+  "Name": "Dezzer",
+  "Version": "0.1.0.0",
+  "Author": "Captain Ash",
+  "Description": "Control Deezer Desktop from your Stream Deck and show the current track in OBS. No runtime to install. The volume actions act on Deezer's level in the Windows mixer, which combines with the app's own volume.",
+  "Category": "Dezzer",
+  "CategoryIcon": "imgs/plugin/category-icon",
+  "Icon": "imgs/plugin/marketplace",
+  "URL": "https://github.com/Captain-Ash/dezzer-stream-deck-plugin",
+  "CodePath": "bin/plugin.js",
+  "SDKVersion": 2,
+  "Software": {
+    "MinimumVersion": "6.5"
+  },
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
+  "Nodejs": {
+    "Version": "20"
+  },
+  "Actions": [
+    {
+      "UUID": "com.dezzer.deezer.play-pause",
+      "Name": "Play / Pause",
+      "Icon": "imgs/actions/play-pause/icon",
+      "Tooltip": "Toggle playback in Deezer Desktop.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/play-pause/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 10
+        }
+      ]
+    },
+    {
+      "UUID": "com.dezzer.deezer.next",
+      "Name": "Next track",
+      "Icon": "imgs/actions/next/icon",
+      "Tooltip": "Skip to the next track.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/next/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 10
+        }
+      ]
+    },
+    {
+      "UUID": "com.dezzer.deezer.previous",
+      "Name": "Previous track",
+      "Icon": "imgs/actions/previous/icon",
+      "Tooltip": "Go back to the previous track.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/previous/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 10
+        }
+      ]
+    },
+    {
+      "UUID": "com.dezzer.deezer.volume-up",
+      "Name": "Volume +",
+      "Icon": "imgs/actions/volume-up/icon",
+      "Tooltip": "Raise Deezer's volume in the Windows mixer. This combines with Deezer's own volume slider.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/volume-up/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 10
+        }
+      ]
+    },
+    {
+      "UUID": "com.dezzer.deezer.volume-down",
+      "Name": "Volume -",
+      "Icon": "imgs/actions/volume-down/icon",
+      "Tooltip": "Lower Deezer's volume in the Windows mixer. This combines with Deezer's own volume slider.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/volume-down/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 10
+        }
+      ]
+    },
+    {
+      "UUID": "com.dezzer.deezer.now-playing",
+      "Name": "Now playing",
+      "Icon": "imgs/actions/now-playing/icon",
+      "Tooltip": "Show the artwork, title, artist and progress. Press to play or pause.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/now-playing/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 9
+        }
+      ]
+    },
+    {
+      "UUID": "com.dezzer.deezer.diagnostics",
+      "Name": "Deezer status",
+      "Icon": "imgs/actions/diagnostics/icon",
+      "Tooltip": "Show the status of the local service and of Deezer. Press to restart the service.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/diagnostics/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 9
+        }
+      ]
+    },
+    {
+      "UUID": "com.dezzer.deezer.overlay-info",
+      "Name": "OBS overlay",
+      "Icon": "imgs/actions/overlay-info/icon",
+      "Tooltip": "Open a preview of the overlay and provide the URL to paste into OBS.",
+      "PropertyInspectorPath": "ui/property-inspector.html",
+      "Controllers": [
+        "Keypad"
+      ],
+      "States": [
+        {
+          "Image": "imgs/actions/overlay-info/key",
+          "TitleAlignment": "bottom",
+          "FontSize": 9
+        }
+      ]
+    }
+  ]
+}

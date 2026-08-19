@@ -1,0 +1,23 @@
+{
+  "name": "@dezzer/streamdeck-plugin",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "node --import tsx --test test/settings.test.ts test/display.test.ts test/key-render.test.ts test/i18n.test.ts"
+  },
+  "dependencies": {
+    "@dezzer/playback-contract": "*",
+    "@elgato/streamdeck": "^2.0.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.10",
+    "@types/ws": "^8.5.13",
+    "esbuild": "^0.24.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

@@ -1,0 +1,345 @@
+/*
+ * Overlay Dezzer — aucune police distante, aucun CDN : OBS doit pouvoir l'afficher
+ * sans accès internet (§14.2).
+ */
+
+:root {
+  --accent: #a238ff;
+  --text: #ffffff;
+  --text-dim: rgba(255, 255, 255, 0.68);
+  --panel: rgba(14, 14, 20, 0.62);
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --radius: 14px;
+  --gap: 18px;
+  --transition: 260ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+  font-family: "Segoe UI", "Segoe UI Variable", system-ui, -apple-system, "Helvetica Neue",
+    Arial, sans-serif;
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+.widget {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--gap);
+  padding: 16px;
+  border-radius: var(--radius);
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--transition), transform var(--transition);
+}
+
+/* --- Etats globaux ------------------------------------------------------- */
+
+body[data-state="loading"] .widget,
+body[data-state="empty"] .widget,
+body[data-hidden="true"] .widget {
+  opacity: 0;
+  transform: translateY(8px);
+  pointer-events: none;
+}
+
+/* --- Pochette ------------------------------------------------------------ */
+
+.artwork {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex: none;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.artwork[hidden] {
+  display: none;
+}
+
+.artwork img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0;
+  transition: opacity var(--transition);
+}
+
+.artwork[data-loaded="true"] img {
+  opacity: 1;
+}
+
+.artwork-placeholder {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.35);
+  transition: opacity var(--transition);
+}
+
+.artwork-placeholder svg {
+  width: 40%;
+  height: 40%;
+}
+
+.artwork[data-loaded="true"] .artwork-placeholder {
+  opacity: 0;
+}
+
+/* --- Textes -------------------------------------------------------------- */
+
+.details {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.line {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+/*
+ * Defilement des textes trop longs. La translation est portee par une variable mise a jour
+ * en JavaScript apres mesure : le CSS seul ne sait pas si le texte deborde.
+ */
+.scroller {
+  display: inline-block;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+.line[data-overflow="true"] .scroller {
+  animation: scroll-text var(--scroll-duration, 12s) linear infinite;
+}
+
+@keyframes scroll-text {
+  0%,
+  12% {
+    transform: translateX(0);
+  }
+  50%,
+  62% {
+    transform: translateX(var(--scroll-distance, 0px));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.artist {
+  font-size: 16px;
+  color: var(--text-dim);
+}
+
+.album {
+  font-size: 13px;
+  color: var(--text-dim);
+  opacity: 0.75;
+}
+
+.album[hidden] {
+  display: none;
+}
+
+/* --- Progression --------------------------------------------------------- */
+
+.progress {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.progress[hidden] {
+  display: none;
+}
+
+.progress-track {
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 120ms linear;
+}
+
+.waveform {
+  display: none;
+  width: 100%;
+  height: 30px;
+}
+
+.progress[data-waveform="true"] .progress-track {
+  display: none;
+}
+
+.progress[data-waveform="true"] .waveform {
+  display: block;
+}
+
+.times {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-dim);
+}
+
+.times[hidden] {
+  display: none;
+}
+
+/* --- Badge lecture / pause ---------------------------------------------- */
+
+.status-badge {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent);
+  position: relative;
+  opacity: 0.9;
+}
+
+.status-badge::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 0;
+  height: 0;
+}
+
+/* Le badge reflète l'état courant : triangle en lecture, deux barres en pause. */
+.status-badge[data-status="playing"]::before {
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid var(--text);
+  transform: translateX(1px);
+}
+
+.status-badge[data-status="paused"]::before {
+  width: 8px;
+  height: 9px;
+  border-left: 3px solid var(--text);
+  border-right: 3px solid var(--text);
+  box-sizing: content-box;
+}
+
+/* --- Themes -------------------------------------------------------------- */
+
+body[data-theme="minimal"] .widget {
+  background: none;
+  padding: 8px 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+body[data-theme="glass"] .widget {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(14px) saturate(1.25);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+}
+
+body[data-theme="neon"] {
+  --accent: #16f5c7;
+  --panel: rgba(6, 8, 18, 0.78);
+}
+
+body[data-theme="neon"] .widget {
+  background: var(--panel);
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.35), 0 0 28px
+    color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+body[data-theme="neon"] .title {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+
+body[data-theme="broadcast"] {
+  --accent: #ffd400;
+  --text-dim: rgba(255, 255, 255, 0.85);
+}
+
+body[data-theme="broadcast"] .widget {
+  background: #0b0b0f;
+  border-left: 6px solid var(--accent);
+  border-radius: 4px;
+}
+
+body[data-theme="broadcast"] .title {
+  font-weight: 750;
+  font-size: 24px;
+}
+
+/* --- Animations ---------------------------------------------------------- */
+
+.widget.track-change .details {
+  animation: track-in 340ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.widget.track-change .artwork {
+  animation: artwork-in 340ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+@keyframes track-in {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes artwork-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Sans defilement, il faut au moins signaler la troncature. */
+  .line {
+    text-overflow: ellipsis;
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "name": "dezzer",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Dezzer — plugin Stream Deck Deezer + overlay OBS",
+  "author": "Captain Ash",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/Captain-Ash/dezzer-stream-deck-plugin#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Captain-Ash/dezzer-stream-deck-plugin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Captain-Ash/dezzer-stream-deck-plugin/issues"
+  },
+  "workspaces": [
+    "packages/*",
+    "apps/streamdeck-plugin",
+    "apps/overlay"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "node scripts/package-plugin.mjs",
+    "build:debug": "node scripts/package-plugin.mjs --debug",
+    "pack": "streamdeck pack apps/streamdeck-plugin/com.dezzer.deezer.sdPlugin --output dist --force",
+    "validate": "streamdeck validate apps/streamdeck-plugin/com.dezzer.deezer.sdPlugin",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present && npm run bridge:test",
+    "icons": "node scripts/generate-icons.mjs",
+    "bridge:build": "cargo build --manifest-path apps/bridge/Cargo.toml --release",
+    "bridge:test": "cargo test --manifest-path apps/bridge/Cargo.toml",
+    "bridge:dev": "cargo run --manifest-path apps/bridge/Cargo.toml -- --dev",
+    "plugin:install": "node scripts/install-plugin.mjs",
+    "spike": "powershell -NoProfile -ExecutionPolicy Bypass -File ./scripts/spike/Get-MediaSessions.ps1"
+  },
+  "devDependencies": {
+    "@elgato/cli": "^1.4.0"
+  }
+}
