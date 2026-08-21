@@ -13,8 +13,6 @@ pub mod unavailable;
 #[cfg(windows)]
 pub mod app_volume;
 #[cfg(windows)]
-pub mod audio_capture;
-#[cfg(windows)]
 pub mod windows_media;
 
 #[async_trait]

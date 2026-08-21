@@ -31,7 +31,6 @@ impl TestBridge {
             token: TOKEN.to_string(),
             adapter: AdapterKind::Mock,
             port: 0,
-            overlay_dir: data_dir.join("overlay"),
             data_dir: data_dir.clone(),
             log_level: "error".into(),
             parent_pid: None,

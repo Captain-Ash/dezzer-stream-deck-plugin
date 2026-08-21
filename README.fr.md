@@ -1,8 +1,8 @@
-# Dezzer
+# Deezer
 
 [English](README.md)
 
-Plugin Stream Deck pour Deezer Desktop, avec overlay « Now Playing » pour OBS.
+Plugin Stream Deck pour Deezer Desktop.
 
 L'utilisateur final installe **un seul plugin Stream Deck**. Aucun Node.js, aucun terminal,
 aucun service à démarrer : le plugin embarque et supervise un binaire local invisible.
@@ -19,21 +19,20 @@ aucun service à démarrer : le plugin embarque et supervise un binaire local in
 | **Volume + / -** | Ajuste le niveau de Deezer dans le mixeur Windows |
 | **Morceau en cours** | Pochette, titre, artiste et temps écoulé ; appui pour basculer la lecture |
 | **État Deezer** | Affiche l'état du service local ; appui pour le redémarrer |
-| **Overlay OBS** | Ouvre un aperçu de l'overlay dans le navigateur |
 
-Les titres et noms d'artiste trop longs **défilent automatiquement**, sur les touches comme
-dans l'overlay OBS.
-
-L'overlay OBS propose quatre thèmes, une couleur d'accent et un **analyseur de spectre**
-optionnel sur la barre de progression, calculé à partir du flux audio de Deezer lui-même.
+Les titres et noms d'artiste trop longs **défilent automatiquement** sur les touches.
 
 Le plugin est disponible en **français et en anglais**, selon la langue choisie dans
 Stream Deck.
 
+> **Vous cherchez un overlay OBS ?** C'est un produit séparé :
+> [Deezer OBS Overlay](https://github.com/Captain-Ash/deezer-obs-overlay). Les deux
+> fonctionnent côte à côte sans se gêner.
+
 ## Installation
 
 Téléchargez `com.dezzer.deezer.streamDeckPlugin` depuis la
-[dernière release](https://github.com/Captain-Ash/dezzer-stream-deck-plugin/releases) et
+[dernière release](https://github.com/Captain-Ash/deezer-stream-deck-plugin/releases) et
 ouvrez-le. Stream Deck demande confirmation, c'est tout.
 
 Voir le [guide utilisateur](docs/user-guide.fr.md) pour l'usage au quotidien.
@@ -63,24 +62,22 @@ Un résultat de confiance affiche `Good signature from "Captain_Ash"` avec l'emp
   effet observable.
 - **Le volume est celui du mixeur Windows**, pas le curseur interne de Deezer : Windows
   n'offre aucun moyen de piloter le volume propre à une application. Les deux se multiplient.
-- Le volume et l'analyseur de spectre restent inactifs tant que Deezer n'a pas produit de
-  son au moins une fois, car Windows ne crée la session audio qu'à ce moment-là.
+- Le volume reste inactif tant que Deezer n'a pas produit de son au moins une fois, car
+  Windows ne crée la session audio qu'à ce moment-là.
 
-Le bridge écoute sur un **port fixe** (39217), afin que l'URL collée dans OBS reste valable
-d'un redémarrage à l'autre.
+Le bridge écoute sur un **port éphémère** attribué par le système : le plugin le découvre
+via un fichier de disponibilité, ce qui évite tout conflit avec un autre programme.
 
 ## Architecture
 
 ```text
 Stream Deck ──┐
-              │ HTTP + WebSocket sur 127.0.0.1:39217, jeton d'installation
-OBS ──────────┤
+              │ HTTP + WebSocket sur 127.0.0.1, port éphémère, jeton d'installation
               ▼
-        dezzer-bridge (binaire Rust ~1,4 Mo, sans fenêtre)
+        dezzer-bridge (binaire Rust, sans fenêtre)
               │
               ├──► Windows Global Media Transport Controls  (lecture, métadonnées)
-              ├──► Windows Core Audio                       (volume par application)
-              └──► Capture applicative + FFT                (analyseur de spectre)
+              └──► Windows Core Audio                       (volume par application)
                           │
                           ▼
                     Deezer Desktop
@@ -88,9 +85,8 @@ OBS ──────────┤
 
 | Dossier | Rôle |
 |---|---|
-| `apps/bridge` | Bridge local (Rust) : adapters, API HTTP/WebSocket, service de l'overlay |
+| `apps/bridge` | Bridge local (Rust) : adapters, API HTTP/WebSocket |
 | `apps/streamdeck-plugin` | Plugin Stream Deck (TypeScript) et son Property Inspector |
-| `apps/overlay` | Widget OBS (TypeScript + CSS, sans dépendance externe) |
 | `packages/playback-contract` | Contrat de données partagé, miroir de `apps/bridge/src/contract.rs` |
 | `scripts` | Spike, génération d'icônes, packaging, installation |
 
@@ -105,7 +101,7 @@ OBS ──────────┤
 ```powershell
 npm install
 
-npm run build          # icônes + overlay + plugin + bridge (release) -> .sdPlugin
+npm run build          # icônes + plugin + bridge (release) -> .sdPlugin
 npm run plugin:install # copie dans Stream Deck et le redémarre
 npm run pack           # produit dist/com.dezzer.deezer.streamDeckPlugin
 
@@ -119,7 +115,7 @@ npm run spike          # rapport de compatibilité des sessions média Windows
 Développer sans Deezer :
 
 ```powershell
-$env:DEZZER_BRIDGE_ADAPTER = "mock"
+$env:DEEZER_BRIDGE_ADAPTER = "mock"
 npm run bridge:dev
 ```
 
@@ -148,7 +144,7 @@ remplacées avant toute soumission au Marketplace Stream Deck.
 [PolyForm Noncommercial 1.0.0](LICENSE) — libre d'usage, de modification et de partage
 pour tout usage **non commercial**.
 
-L'usage commercial n'est pas accordé par cette licence. Vendre Dezzer, l'intégrer à un
+L'usage commercial n'est pas accordé par cette licence. Vendre Deezer, l'intégrer à un
 produit ou service payant, ou monétiser un travail dérivé exige l'accord écrit préalable de
 Captain Ash.
 

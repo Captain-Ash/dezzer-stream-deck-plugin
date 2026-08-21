@@ -1,4 +1,4 @@
-//! Binaire du bridge Dezzer. Aucun affichage, aucune fenêtre : il est piloté par le plugin.
+//! Binaire du bridge Deezer. Aucun affichage, aucune fenêtre : il est piloté par le plugin.
 
 // Empeche l'ouverture d'une console lorsque le plugin lance le binaire (§8.1).
 #![cfg_attr(all(windows, not(debug_assertions)), windows_subsystem = "windows")]
@@ -22,7 +22,7 @@ fn main() -> std::process::ExitCode {
 
     if config.dev_mode {
         // Uniquement en developpement : le token n'est jamais journalise en production.
-        println!("DEZZER_BRIDGE_TOKEN={}", config.token);
+        println!("DEEZER_BRIDGE_TOKEN={}", config.token);
     }
 
     let runtime = match tokio::runtime::Builder::new_multi_thread()

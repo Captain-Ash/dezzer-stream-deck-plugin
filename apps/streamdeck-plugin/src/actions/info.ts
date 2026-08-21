@@ -10,12 +10,7 @@ import {
   unavailableKey,
   type Artwork,
 } from "../key-render.js";
-import {
-  buildOverlayUrl,
-  normaliseOverlay,
-  type GlobalSettings,
-  type NowPlayingFormat,
-} from "../settings.js";
+import { type GlobalSettings, type NowPlayingFormat } from "../settings.js";
 import { BridgeAction, unavailableLabel, type AnyAction } from "./base.js";
 
 /** Au-delà, le texte déborde de la touche et doit défiler. */
@@ -47,7 +42,7 @@ export class NowPlayingAction extends BridgeAction {
     const label = unavailableLabel(snapshot);
     if (label) {
       this.scrolling = false;
-      await action.setImage(unavailableKey("overlay", t(label)));
+      await action.setImage(unavailableKey("diagnostics", t(label)));
       await action.setTitle("");
       return;
     }
@@ -148,41 +143,5 @@ export function diagnose(snapshot: BridgeSnapshot): {
         };
       }
       return { mood: "idle", titleKey: "key.deezerReady", messageKey: "diagnostic.paused" };
-  }
-}
-
-@action({ UUID: "com.dezzer.deezer.overlay-info" })
-export class OverlayInfoAction extends BridgeAction {
-  override async onKeyDown(event: KeyDownEvent): Promise<void> {
-    const snapshot = this.service.snapshot();
-    if (!snapshot.info) {
-      await event.action.showAlert();
-      await this.flash(event.action, t("key.bridgeOff"));
-      return;
-    }
-
-    const settings = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
-    const url = buildOverlayUrl(
-      snapshot.info.port,
-      snapshot.info.token,
-      normaliseOverlay(settings?.overlay),
-    );
-
-    // L'URL contient le jeton : elle part vers le navigateur local, jamais vers un log.
-    streamDeck.system.openUrl(url);
-    await event.action.showOk();
-  }
-
-  protected override async render(action: AnyAction, snapshot: BridgeSnapshot): Promise<void> {
-    if (!action.isKey()) return;
-
-    if (!snapshot.info) {
-      await action.setImage(unavailableKey("overlay", t("key.bridgeOff")));
-      await action.setTitle("");
-      return;
-    }
-
-    await action.setImage(glyphKey({ glyph: "overlay", mood: "idle" }));
-    await action.setTitle(t("key.overlay"));
   }
 }

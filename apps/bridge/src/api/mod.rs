@@ -1,4 +1,4 @@
-//! API HTTP locale et serveur d'overlay.
+//! API HTTP locale.
 
 pub mod auth;
 pub mod ws;
@@ -15,7 +15,6 @@ use axum::routing::{get, post};
 use axum::{Json, Router};
 use serde::Deserialize;
 use serde_json::json;
-use tower_http::services::{ServeDir, ServeFile};
 use tower_http::set_header::SetResponseHeaderLayer;
 
 use crate::adapters::PlaybackAdapter;
@@ -24,7 +23,6 @@ use crate::contract::{
     BridgeError, BridgeErrorCode, Command, HealthResponse, NowPlayingState, CONTRACT_VERSION,
     SCHEMA_VERSION,
 };
-use crate::levels::LevelFeed;
 use crate::store::PlaybackStore;
 
 /// Les corps de requête de contrôle sont minuscules ; tout dépassement est suspect.
@@ -38,7 +36,6 @@ pub struct AppState {
     pub config: Arc<Config>,
     pub store: Arc<PlaybackStore>,
     pub adapter: Arc<dyn PlaybackAdapter>,
-    pub levels: LevelFeed,
     pub started_at: Instant,
     pub ws_clients: AtomicUsize,
     port: AtomicU16,
@@ -54,7 +51,6 @@ impl AppState {
             config,
             store,
             adapter,
-            levels: LevelFeed::start(),
             started_at: Instant::now(),
             ws_clients: AtomicUsize::new(0),
             port: AtomicU16::new(0),
@@ -70,14 +66,13 @@ impl AppState {
     }
 }
 
-pub fn router(state: Arc<AppState>, overlay_dir: &std::path::Path) -> Router {
+pub fn router(state: Arc<AppState>) -> Router {
     let protected = Router::new()
         .route("/health", get(health))
         .route("/v1/state", get(get_state))
         .route("/v1/capabilities", get(get_capabilities))
         .route("/v1/artwork/{key}", get(get_artwork))
         .route("/v1/events", get(ws::handler))
-        .route("/v1/levels", get(ws::levels))
         .route("/v1/controls/play-pause", post(control_play_pause))
         .route("/v1/controls/next", post(control_next))
         .route("/v1/controls/previous", post(control_previous))
@@ -91,33 +86,8 @@ pub fn router(state: Arc<AppState>, overlay_dir: &std::path::Path) -> Router {
         ))
         .layer(middleware::from_fn_with_state(state.clone(), authenticate));
 
-    // `nest` ne propage pas le fallback d'un routeur imbrique : l'overlay est monte
-    // comme un service a part entiere.
-    let index = overlay_dir.join("index.html");
-    let overlay = tower::ServiceBuilder::new()
-        .layer(SetResponseHeaderLayer::overriding(
-            header::CONTENT_SECURITY_POLICY,
-            HeaderValue::from_static(
-                "default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; \
-                 img-src 'self' data:; font-src 'self'; connect-src 'self' ws://127.0.0.1:* ws://localhost:*; \
-                 base-uri 'none'; form-action 'none'; frame-ancestors 'none'",
-            ),
-        ))
-        .layer(SetResponseHeaderLayer::overriding(
-            header::HeaderName::from_static("x-content-type-options"),
-            HeaderValue::from_static("nosniff"),
-        ))
-        // Sans cet en-tete, le navigateur applique un cache heuristique : OBS continuerait
-        // d'afficher l'ancien overlay apres une mise a jour du plugin.
-        .layer(SetResponseHeaderLayer::overriding(
-            header::CACHE_CONTROL,
-            HeaderValue::from_static("no-cache"),
-        ))
-        .service(ServeDir::new(overlay_dir).fallback(ServeFile::new(index)));
-
     Router::new()
         .merge(protected)
-        .nest_service("/overlay", overlay)
         .fallback(not_found)
         .with_state(state)
 }

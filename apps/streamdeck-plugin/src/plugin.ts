@@ -1,4 +1,4 @@
-/** Point d'entrée du plugin Dezzer. */
+/** Point d'entrée du plugin Deezer. */
 
 import { randomBytes } from "node:crypto";
 import { dirname, resolve } from "node:path";
@@ -6,12 +6,7 @@ import { dirname, resolve } from "node:path";
 import streamDeck from "@elgato/streamdeck";
 
 import type { BridgeAction } from "./actions/base.js";
-import {
-  DiagnosticsAction,
-  NowPlayingAction,
-  OverlayInfoAction,
-  diagnose,
-} from "./actions/info.js";
+import { DiagnosticsAction, NowPlayingAction, diagnose } from "./actions/info.js";
 import {
   NextAction,
   PlayPauseAction,
@@ -21,12 +16,7 @@ import {
 } from "./actions/transport.js";
 import { BridgeService } from "./bridge-service.js";
 import { t } from "./i18n.js";
-import {
-  buildOverlayUrl,
-  normaliseOverlay,
-  type GlobalSettings,
-  type OverlaySettings,
-} from "./settings.js";
+import { type GlobalSettings } from "./settings.js";
 
 /** Cadence de rafraîchissement du temps écoulé sur la touche « Morceau en cours ». */
 const TICK_MS = 1_000;
@@ -56,24 +46,8 @@ const INSPECTOR_KEYS = [
   "pi.artworkOnKeys",
   "pi.volumeStep",
   "pi.volumeHint",
-  "pi.overlay",
-  "pi.theme",
-  "pi.width",
-  "pi.accent",
-  "pi.accentPlaceholder",
-  "pi.artwork",
-  "pi.album",
-  "pi.time",
-  "pi.waveform",
-  "pi.autoHide",
-  "pi.hideAfter",
-  "pi.browserSourceUrl",
-  "pi.revealUrl",
-  "pi.copyUrl",
-  "pi.preview",
   "pi.rotateToken",
   "pi.rotateConfirm",
-  "pi.obsHint",
   "pi.diagnosticExport",
   "pi.copyDiagnostic",
   "pi.diagnosticHint",
@@ -107,7 +81,6 @@ async function main(): Promise<void> {
     new VolumeDownAction(service),
     new NowPlayingAction(service),
     new DiagnosticsAction(service),
-    new OverlayInfoAction(service),
   ];
 
   for (const action of actions) {
@@ -137,9 +110,7 @@ async function main(): Promise<void> {
   }, ANIMATION_TICK_MS);
 
   streamDeck.ui.onSendToPlugin(async (event) => {
-    const payload = event.payload as
-      | { action?: string; overlay?: Partial<OverlaySettings> }
-      | undefined;
+    const payload = event.payload as { action?: string } | undefined;
 
     switch (payload?.action) {
       case "getState":
@@ -155,11 +126,6 @@ async function main(): Promise<void> {
         await service.restart();
         await publishInspectorState(service);
         break;
-      case "openOverlay": {
-        const url = await currentOverlayUrl(service);
-        if (url) streamDeck.system.openUrl(url);
-        break;
-      }
       case "rotateToken": {
         const settings = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
         await streamDeck.settings.setGlobalSettings<GlobalSettings>({
@@ -168,15 +134,6 @@ async function main(): Promise<void> {
         });
         // Le bridge ne connait que l'ancien jeton : il doit repartir avec le nouveau.
         await service.restart();
-        await publishInspectorState(service);
-        break;
-      }
-      case "saveOverlay": {
-        const settings = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
-        await streamDeck.settings.setGlobalSettings<GlobalSettings>({
-          ...settings,
-          overlay: normaliseOverlay(payload.overlay),
-        });
         await publishInspectorState(service);
         break;
       }
@@ -200,8 +157,8 @@ async function main(): Promise<void> {
 }
 
 /**
- * Le jeton est propre à l'installation et persistant : l'URL collée dans OBS doit rester
- * valable après un redémarrage de Stream Deck.
+ * Le jeton est propre à l'installation et persistant : le service local doit rester
+ * joignable après un redémarrage de Stream Deck.
  */
 async function ensureToken(): Promise<string> {
   const settings = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
@@ -212,17 +169,6 @@ async function ensureToken(): Promise<string> {
   const generated = randomBytes(32).toString("hex");
   await streamDeck.settings.setGlobalSettings<GlobalSettings>({ ...settings, token: generated });
   return generated;
-}
-
-async function currentOverlayUrl(service: BridgeService): Promise<string | undefined> {
-  const snapshot = service.snapshot();
-  if (!snapshot.info) return undefined;
-  const settings = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
-  return buildOverlayUrl(
-    snapshot.info.port,
-    snapshot.info.token,
-    normaliseOverlay(settings?.overlay),
-  );
 }
 
 /** Diagnostic lisible : le détail technique du bridge complète le message traduit. */
@@ -244,13 +190,11 @@ function inspectorTranslations(): Record<string, string> {
   return resolved;
 }
 
-/** Alimente le Property Inspector. Le jeton n'apparaît que dans l'URL de l'overlay. */
+/** Alimente le Property Inspector. Aucun jeton n'y figure. */
 async function publishInspectorState(service: BridgeService): Promise<void> {
   if (!streamDeck.ui.action) return;
 
   const snapshot = service.snapshot();
-  const settings = await streamDeck.settings.getGlobalSettings<GlobalSettings>();
-  const overlay = normaliseOverlay(settings?.overlay);
 
   await streamDeck.ui.sendToPropertyInspector({
     event: "dezzer.state",
@@ -271,10 +215,6 @@ async function publishInspectorState(service: BridgeService): Promise<void> {
       capabilities: snapshot.state.capabilities,
     },
     diagnostic: diagnosticMessage(snapshot),
-    overlay,
-    overlayUrl: snapshot.info
-      ? buildOverlayUrl(snapshot.info.port, snapshot.info.token, overlay)
-      : undefined,
     environment: {
       pluginVersion: streamDeck.info.plugin.version,
       platform: process.platform,

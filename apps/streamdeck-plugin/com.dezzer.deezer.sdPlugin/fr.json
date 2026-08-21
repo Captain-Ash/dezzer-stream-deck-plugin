@@ -1,7 +1,7 @@
 {
-  "Name": "Dezzer",
-  "Description": "Contrôlez Deezer Desktop depuis votre Stream Deck et affichez le morceau en cours dans OBS. Aucun runtime à installer. Les actions de volume agissent sur le volume de Deezer dans le mixeur Windows, qui se combine avec le volume interne de l'application.",
-  "Category": "Dezzer",
+  "Name": "Deezer",
+  "Description": "Contrôlez Deezer Desktop depuis votre Stream Deck. Aucun runtime à installer. Les actions de volume agissent sur le volume de Deezer dans le mixeur Windows, qui se combine avec le volume interne de l'application.",
+  "Category": "Deezer",
   "com.dezzer.deezer.play-pause": {
     "Name": "Play / Pause",
     "Tooltip": "Bascule la lecture de Deezer Desktop."
@@ -30,10 +30,6 @@
     "Name": "État Deezer",
     "Tooltip": "Affiche l'état du service local et de Deezer. Appuyez pour redémarrer le service."
   },
-  "com.dezzer.deezer.overlay-info": {
-    "Name": "Overlay OBS",
-    "Tooltip": "Ouvre un aperçu de l'overlay et fournit l'URL à coller dans OBS."
-  },
   "Localization": {
     "key": {
       "starting": "Démarrage…",
@@ -45,8 +41,7 @@
       "unsupported": "Non pris\nen charge",
       "unavailable": "Indisponible",
       "unavailableShort": "Indispo.",
-      "restarting": "Redémarrage…",
-      "overlay": "Overlay\nOBS"
+      "restarting": "Redémarrage…"
     },
     "diagnostic": {
       "starting": "Initialisation du service local…",
@@ -79,24 +74,8 @@
       "artworkOnKeys": "Pochette en fond",
       "volumeStep": "Pas de volume",
       "volumeHint": "Les actions Volume agissent sur le curseur de Deezer dans le mixeur Windows, pas dans Deezer. Les deux niveaux se combinent : 50 % de chaque côté donnent 25 % de son.",
-      "overlay": "Overlay OBS",
-      "theme": "Thème",
-      "width": "Largeur (px)",
-      "accent": "Couleur d'accent",
-      "accentPlaceholder": "#a238ff (vide = thème)",
-      "artwork": "Pochette",
-      "album": "Album",
-      "time": "Temps",
-      "waveform": "Waveform",
-      "autoHide": "Masquage auto",
-      "hideAfter": "Après (ms)",
-      "browserSourceUrl": "URL Browser Source",
-      "revealUrl": "Afficher l'URL",
-      "copyUrl": "Copier l'URL",
-      "preview": "Aperçu navigateur",
       "rotateToken": "Régénérer le jeton",
-      "rotateConfirm": "Régénérer le jeton ? L'URL actuelle cessera de fonctionner : il faudra la recoller dans OBS.",
-      "obsHint": "Dans OBS : ajoutez une source Navigateur, collez l'URL, puis réglez la taille sur 720 × 160. Le port est fixe : l'URL reste valable après un redémarrage.",
+      "rotateConfirm": "Régénérer le jeton ? Le service local redémarre immédiatement.",
       "diagnosticExport": "Diagnostic exportable",
       "copyDiagnostic": "Copier le diagnostic",
       "diagnosticHint": "Ne contient aucun jeton. Collez-le tel quel dans un rapport de bug.",

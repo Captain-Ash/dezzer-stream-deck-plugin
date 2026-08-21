@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for taking the time to look at Dezzer.
+Thanks for taking the time to look at Deezer.
 
 ## Reporting a bug
 
@@ -10,7 +10,7 @@ Open an issue with:
 - the **Exportable diagnostic** block from the Property Inspector (it contains no token);
 - what you expected, and what happened instead.
 
-Logs live in `%LOCALAPPDATA%\Dezzer\logs`. They never contain the access token, but do
+Logs live in `%LOCALAPPDATA%\Deezer\logs`. They never contain the access token, but do
 check before pasting anything.
 
 ## Development setup
@@ -29,7 +29,7 @@ npm run plugin:install
 To work without Deezer running, use the mock adapter:
 
 ```powershell
-$env:DEZZER_BRIDGE_ADAPTER = "mock"
+$env:DEEZER_BRIDGE_ADAPTER = "mock"
 npm run bridge:dev
 ```
 
@@ -46,6 +46,6 @@ npm run bridge:dev
 
 ## Scope
 
-Dezzer only drives Deezer through public Windows APIs: media sessions and Core Audio. No
-process injection, no UI scraping, no synthetic keystrokes. Contributions that rely on
+This plugin only drives Deezer through public Windows APIs: media sessions and Core Audio.
+No process injection, no UI scraping, no synthetic keystrokes. Contributions that rely on
 those techniques will not be merged.

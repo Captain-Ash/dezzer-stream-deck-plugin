@@ -9,7 +9,6 @@ target/
 
 # Stream Deck plugin build output
 apps/streamdeck-plugin/com.dezzer.deezer.sdPlugin/bin/
-apps/streamdeck-plugin/com.dezzer.deezer.sdPlugin/overlay/
 *.streamDeckPlugin
 
 # Spike / diagnostics output

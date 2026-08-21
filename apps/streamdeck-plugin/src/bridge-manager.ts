@@ -122,9 +122,8 @@ export class BridgeManager {
     const child = spawn(binary, [], {
       env: {
         ...process.env,
-        DEZZER_BRIDGE_TOKEN: token,
-        DEZZER_BRIDGE_PARENT_PID: String(process.pid),
-        DEZZER_BRIDGE_OVERLAY_DIR: join(this.pluginRoot, "overlay"),
+        DEEZER_BRIDGE_TOKEN: token,
+        DEEZER_BRIDGE_PARENT_PID: String(process.pid),
       },
       stdio: "ignore",
       windowsHide: true,
@@ -239,7 +238,7 @@ export function runtimeFilePath(): string {
     process.env.LOCALAPPDATA ??
     process.env.XDG_DATA_HOME ??
     join(process.env.HOME ?? process.env.USERPROFILE ?? ".", ".local", "share");
-  return join(base, "Dezzer", "bridge-runtime.json");
+  return join(base, "Deezer", "bridge-runtime.json");
 }
 
 async function readRuntimeInfo(): Promise<{ pid: number; port: number } | undefined> {

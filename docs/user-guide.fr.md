@@ -1,4 +1,4 @@
-# Guide utilisateur — Dezzer
+# Guide utilisateur — Deezer
 
 [English version](user-guide.md)
 
@@ -16,7 +16,7 @@ disponibles.
 ## Premier usage
 
 1. Ouvrez **Deezer Desktop** et lancez une piste.
-2. Dans Stream Deck, ouvrez la catégorie **Dezzer** et déposez l'action **Play / Pause** sur
+2. Dans Stream Deck, ouvrez la catégorie **Deezer** et déposez l'action **Play / Pause** sur
    une touche.
 3. La touche affiche l'état réel de la lecture dans la seconde.
 
@@ -33,10 +33,12 @@ piste n'a encore été jouée depuis son démarrage.
 | **Volume +** / **Volume -** | Ajuste le volume de Deezer |
 | **Morceau en cours** | Pochette, titre, artiste et temps écoulé ; l'appui bascule la lecture |
 | **État Deezer** | Affiche l'état du service local ; l'appui le redémarre |
-| **Overlay OBS** | Ouvre un aperçu de l'overlay dans votre navigateur |
 
-Un titre ou un artiste trop long **défile automatiquement** sur la touche, et de la même
-manière dans l'overlay OBS.
+Un titre ou un artiste trop long **défile automatiquement** sur la touche.
+
+> **Un widget « Now Playing » pour OBS ?** Ce plugin ne s'en occupe plus. Installez le
+> produit dédié : [Deezer OBS Overlay](https://github.com/Captain-Ash/deezer-obs-overlay).
+> Il se gère entièrement depuis OBS et peut tourner en même temps que ce plugin.
 
 ### À savoir sur le volume
 
@@ -52,72 +54,13 @@ Conséquences :
   car Windows ne crée la session audio qu'à ce moment-là.
 
 Le pas d'incrément (1, 2, 5 ou 10 %) se règle dans les paramètres de n'importe quelle
-action Dezzer.
+action Deezer.
 
 ### Aléatoire et répétition
 
 Ces deux commandes ne sont **pas disponibles**. Deezer Desktop les déclare comme non prises
 en charge, et les appels Windows correspondants renvoient un succès sans rien changer.
 Elles ne sont donc pas proposées, plutôt que d'offrir des touches sans effet.
-
-## Overlay dans OBS
-
-1. Sélectionnez n'importe quelle action Dezzer dans Stream Deck pour ouvrir ses réglages.
-2. Section **Overlay OBS** : choisissez le thème, la largeur et les éléments affichés.
-3. Cliquez sur **Copier l'URL**.
-4. Dans OBS : **Sources → + → Navigateur**.
-5. Collez l'URL, réglez la largeur sur **720** et la hauteur sur **160**.
-6. Validez. Le widget apparaît sur fond transparent.
-
-> **L'URL contient un jeton d'accès.** Ne l'affichez pas en direct et ne la partagez pas.
-> Le Property Inspector la masque par défaut ; le bouton de copie fonctionne sans la révéler.
-> Si vous l'avez montrée par inadvertance, le bouton **Régénérer le jeton** invalide
-> l'ancienne URL — il faudra alors recoller la nouvelle dans OBS.
-
-L'URL utilise un **port fixe** : elle reste valable après un redémarrage de Windows, de
-Stream Deck ou du service.
-
-### Réglages de l'overlay
-
-| Réglage | Valeurs | Défaut |
-|---|---|---|
-| Thème | `minimal`, `glass`, `neon`, `broadcast` | `glass` |
-| Largeur | 400 à 1200 px | 720 |
-| Couleur d'accent | couleur hexadécimale, ex. `#ff0066` | celle du thème |
-| Pochette / Album / Temps | affiché ou non | pochette et temps affichés |
-| Waveform | remplace la barre de progression par une forme d'onde en direct | désactivé |
-| Waveform | remplace la barre de progression par un spectre audio en direct | désactivé |
-| Masquage auto | masque le widget après un délai | désactivé |
-
-Une valeur invalide est ignorée et remplacée par le défaut.
-
-### À savoir sur la waveform
-
-Activée, la barre de progression devient un **analyseur de spectre** : une barre par bande
-de fréquence, des graves à gauche aux aigus à droite, qui réagit à la musique en direct.
-Les barres déjà écoutées sont à la couleur d'accent : la barre indique donc toujours votre
-position dans le morceau.
-
-Le service capture **uniquement le flux audio de Deezer**, grâce à la capture applicative
-que Windows propose depuis la version 2004. Discord, les notifications, votre micro et le
-reste du système n'apparaissent jamais dans le spectre. Aucun périphérique virtuel ni
-pilote n'est installé.
-
-- Le spectre reste plat tant que Deezer n'a pas produit de son depuis son lancement, car
-  Windows ne crée la session audio qu'à ce moment-là.
-- Rien n'est capturé ni analysé tant qu'aucun overlay n'affiche le spectre.
-- L'audio n'est jamais enregistré ni écrit sur le disque : chaque bloc est analysé puis jeté.
-
-### À propos de la waveform
-
-Quand elle est activée, la barre de progression devient une forme d'onde qui réagit à la
-musique : les barres sont dessinées à partir du **niveau audio réel de Deezer**, lu dans le
-mixeur Windows.
-
-- La waveform se construit au fil de la lecture ; elle n'est pas connue à l'avance.
-- Elle est remise à zéro à chaque changement de piste.
-- Elle reste plate si Deezer est coupé dans le mixeur Windows, ou n'a pas encore produit de
-  son.
 
 ## Si quelque chose ne marche pas
 
@@ -138,13 +81,12 @@ tel quel dans un rapport de bug : il ne contient aucun jeton.
 - Tout fonctionne en local. Le service n'ouvre aucune connexion vers Internet.
 - Aucun identifiant Deezer n'est demandé.
 - Les métadonnées de lecture ne quittent jamais votre machine.
-- L'audio analysé pour le spectre n'est ni enregistré ni transmis : chaque bloc est traité
-  puis jeté, et rien n'est capturé hors affichage du spectre.
+- Aucun flux audio n'est capturé ni analysé.
 - Les journaux techniques sont conservés localement dans
-  `%LOCALAPPDATA%\Dezzer\logs`, avec une rotation sur 5 jours.
+  `%LOCALAPPDATA%\Deezer\logs`, avec une rotation sur 5 jours.
 
 ## Désinstallation
 
 Désinstallez le plugin depuis Stream Deck. Le service local s'arrête automatiquement avec
-lui. Le dossier `%LOCALAPPDATA%\Dezzer` peut être supprimé manuellement : il ne contient que
+lui. Le dossier `%LOCALAPPDATA%\Deezer` peut être supprimé manuellement : il ne contient que
 des journaux et un fichier d'état.

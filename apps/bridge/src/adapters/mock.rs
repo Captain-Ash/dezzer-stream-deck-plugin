@@ -1,12 +1,12 @@
-//! Adapter simulé : permet de développer plugin et overlay sans Deezer ni Windows.
+//! Adapter simulé : permet de développer le plugin sans Deezer ni Windows.
 //!
-//! Activation : `DEZZER_BRIDGE_ADAPTER=mock`.
+//! Activation : `DEEZER_BRIDGE_ADAPTER=mock`.
 //!
 //! Réglages optionnels :
-//! - `DEZZER_MOCK_CAPS` : liste de capacités séparées par des virgules
+//! - `DEEZER_MOCK_CAPS` : liste de capacités séparées par des virgules
 //!   (`playPause,next,previous,stop,seek,volume`). Défaut : celles réellement observées
 //!   sur Deezer Desktop pendant le spike M0.
-//! - `DEZZER_MOCK_FLAKY=1` : simule la disparition puis le retour du lecteur.
+//! - `DEEZER_MOCK_FLAKY=1` : simule la disparition puis le retour du lecteur.
 
 use std::sync::Arc;
 use std::sync::Mutex;
@@ -88,7 +88,7 @@ pub struct MockPlaybackAdapter {
 
 impl MockPlaybackAdapter {
     pub fn from_env() -> Self {
-        let capabilities = match std::env::var("DEZZER_MOCK_CAPS") {
+        let capabilities = match std::env::var("DEEZER_MOCK_CAPS") {
             Ok(raw) if !raw.trim().is_empty() => parse_capabilities(&raw),
             // Par défaut : exactement ce que le spike M0 a validé sur Deezer Desktop.
             _ => PlaybackCapabilities {
@@ -104,7 +104,7 @@ impl MockPlaybackAdapter {
         };
 
         let flaky = matches!(
-            std::env::var("DEZZER_MOCK_FLAKY").as_deref(),
+            std::env::var("DEEZER_MOCK_FLAKY").as_deref(),
             Ok("1") | Ok("true")
         );
 

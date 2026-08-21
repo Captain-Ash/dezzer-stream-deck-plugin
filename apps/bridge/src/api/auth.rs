@@ -23,8 +23,8 @@ pub fn token_matches(expected: &str, provided: &str) -> bool {
 
 /// Extrait le token d'un en-tête `Authorization: Bearer …` ou d'un paramètre `?token=`.
 ///
-/// Le paramètre de requête n'est là que pour l'overlay et la balise `<img>` d'artwork :
-/// une Browser Source OBS ne peut pas fixer d'en-tête.
+/// Le paramètre de requête n'est là que pour la connexion WebSocket, qui ne permet pas
+/// de fixer un en-tête.
 pub fn extract_token(headers: &HeaderMap, query: Option<&str>) -> Option<String> {
     if let Some(value) = headers
         .get(HEADER_AUTHORIZATION)
@@ -148,7 +148,7 @@ mod tests {
     }
 
     #[test]
-    fn extrait_le_token_de_la_query_pour_l_overlay() {
+    fn extrait_le_token_de_la_query_pour_le_websocket() {
         let map = HeaderMap::new();
         assert_eq!(
             extract_token(&map, Some("theme=glass&token=s3cr3t&width=720")).as_deref(),

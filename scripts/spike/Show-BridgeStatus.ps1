@@ -1,4 +1,4 @@
-$root = "$env:LOCALAPPDATA\Dezzer"
+$root = "$env:LOCALAPPDATA\Deezer"
 
 Write-Output "--- fichier de disponibilite ---"
 Get-Content (Join-Path $root "bridge-runtime.json") -Raw -ErrorAction SilentlyContinue

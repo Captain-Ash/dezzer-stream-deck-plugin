@@ -1,6 +1,6 @@
 /**
- * Assemble le paquet Stream Deck : icônes, overlay compilé, bundle du plugin et binaire
- * du bridge, tous réunis dans `com.dezzer.deezer.sdPlugin`.
+ * Assemble le paquet Stream Deck : icônes, bundle du plugin et binaire du bridge, tous
+ * réunis dans `com.dezzer.deezer.sdPlugin`.
  *
  * Usage : `node scripts/package-plugin.mjs [--debug]`
  */
@@ -53,19 +53,13 @@ async function exists(path) {
   }
 }
 
-console.log("=== 1/4 icones ===");
+console.log("=== 1/3 icones ===");
 run("node", ["scripts/generate-icons.mjs"]);
 
-console.log("\n=== 2/4 overlay ===");
-run("npm", ["run", "build", "-w", "@dezzer/overlay"]);
-const overlayTarget = join(sdPlugin, "overlay");
-await rm(overlayTarget, { recursive: true, force: true });
-await cp(join(root, "apps/overlay/dist"), overlayTarget, { recursive: true });
-
-console.log("\n=== 3/4 plugin ===");
+console.log("\n=== 2/3 plugin ===");
 run("npm", ["run", "build", "-w", "@dezzer/streamdeck-plugin"]);
 
-console.log("\n=== 4/4 bridge ===");
+console.log("\n=== 3/3 bridge ===");
 const cargoArgs = ["build", "--manifest-path", "apps/bridge/Cargo.toml"];
 if (release) cargoArgs.push("--release");
 run("cargo", cargoArgs, root, { RUSTFLAGS: buildRustflags() });

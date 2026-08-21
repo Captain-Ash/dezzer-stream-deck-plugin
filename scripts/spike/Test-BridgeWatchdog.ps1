@@ -5,7 +5,7 @@
 
 $bridge = Get-Process dezzer-bridge -ErrorAction SilentlyContinue
 if (-not $bridge) {
-    Write-Output "aucun bridge en cours : lancez Stream Deck avec une action Dezzer visible"
+    Write-Output "aucun bridge en cours : lancez Stream Deck avec une action Deezer visible"
     exit 1
 }
 
@@ -23,6 +23,6 @@ if (Get-Process -Id $bridge.Id -ErrorAction SilentlyContinue) {
     Write-Output "OK : le bridge s'est arrete avec son parent"
 }
 
-$root = "$env:LOCALAPPDATA\Dezzer"
+$root = "$env:LOCALAPPDATA\Deezer"
 Write-Output ("fichier de disponibilite : " + $(if (Test-Path "$root\bridge-runtime.json") { "present (non nettoye)" } else { "supprime" }))
 Write-Output ("verrou de processus      : " + $(if (Test-Path "$root\bridge.lock") { "present (non nettoye)" } else { "supprime" }))

@@ -6,6 +6,10 @@ on:
 
 permissions:
   contents: write
+  # Necessaire pour l'attestation de provenance : elle prouve que l'archive publiee a bien
+  # ete produite par ce depot, par ce workflow, a partir de ce commit.
+  id-token: write
+  attestations: write
 
 jobs:
   release:
@@ -29,7 +33,21 @@ jobs:
 
       - run: npm run pack
 
+      - name: Compute checksum
+        shell: pwsh
+        run: |
+          $hash = (Get-FileHash dist/com.dezzer.deezer.streamDeckPlugin -Algorithm SHA256).Hash.ToLower()
+          "$hash  com.dezzer.deezer.streamDeckPlugin" | Set-Content -Encoding ascii dist/SHA256SUMS
+
+      - uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: dist/com.dezzer.deezer.streamDeckPlugin
+
+      # SHA256SUMS.asc est signe hors ligne puis joint manuellement a la release : la cle
+      # privee GPG ne doit jamais entrer dans un secret de depot.
       - uses: softprops/action-gh-release@v2
         with:
-          files: dist/com.dezzer.deezer.streamDeckPlugin
+          files: |
+            dist/com.dezzer.deezer.streamDeckPlugin
+            dist/SHA256SUMS
           generate_release_notes: true

@@ -1,4 +1,4 @@
-//! Contrat de données partagé avec le plugin Stream Deck et l'overlay.
+//! Contrat de données partagé avec le plugin Stream Deck.
 //!
 //! Miroir Rust de `packages/playback-contract/src/index.ts`. Toute modification
 //! incompatible impose d'incrémenter [`SCHEMA_VERSION`] des deux côtés.

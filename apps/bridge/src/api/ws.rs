@@ -1,4 +1,4 @@
-//! Flux d'événements WebSocket consommé par le plugin Stream Deck et l'overlay.
+//! Flux d'événements WebSocket consommé par le plugin Stream Deck.
 
 use std::sync::atomic::Ordering;
 use std::sync::Arc;
@@ -14,7 +14,7 @@ use tokio::sync::broadcast::error::RecvError;
 use crate::api::AppState;
 use crate::contract::BridgeEvent;
 
-/// Au-delà, on refuse : plugin + quelques Browser Sources OBS suffisent largement.
+/// Au-delà, on refuse : quelques touches Stream Deck suffisent largement.
 pub const MAX_CLIENTS: usize = 16;
 
 const HEARTBEAT: Duration = Duration::from_secs(20);
@@ -107,62 +107,4 @@ where
     sink.send(Message::Text(payload.into()))
         .await
         .map_err(|_| ())
-}
-
-/// Flux du niveau audio, séparé de `/v1/events` : seul l'overlay en waveform s'y abonne,
-/// et la mesure ne tourne que tant qu'au moins un client écoute.
-pub async fn levels(State(state): State<Arc<AppState>>, upgrade: WebSocketUpgrade) -> Response {
-    let clients = state.ws_clients.load(Ordering::Relaxed);
-    if clients >= MAX_CLIENTS {
-        tracing::warn!(clients, "connexion websocket refusee : trop de clients");
-        return (StatusCode::SERVICE_UNAVAILABLE, "too many clients").into_response();
-    }
-
-    upgrade
-        .max_message_size(1024)
-        .on_upgrade(move |socket| serve_levels(socket, state))
-}
-
-async fn serve_levels(socket: WebSocket, state: Arc<AppState>) {
-    state.ws_clients.fetch_add(1, Ordering::Relaxed);
-
-    let mut subscription = state.levels.subscribe();
-    let (mut sink, mut stream) = socket.split();
-
-    loop {
-        tokio::select! {
-            frame = subscription.receiver.recv() => match frame {
-                Ok(bands) => {
-                    if sink.send(Message::Text(spectrum_frame(&bands).into())).await.is_err() {
-                        break;
-                    }
-                }
-                // Un client en retard rattrape sur la trame suivante : l'historique d'un
-                // spectre n'a aucun intérêt une fois périmé.
-                Err(RecvError::Lagged(_)) => {}
-                Err(RecvError::Closed) => break,
-            },
-            incoming = stream.next() => match incoming {
-                Some(Ok(Message::Close(_))) | None => break,
-                Some(Err(_)) => break,
-                Some(Ok(_)) => {}
-            },
-        }
-    }
-
-    state.ws_clients.fetch_sub(1, Ordering::Relaxed);
-}
-
-/// Trois décimales suffisent pour un visualiseur et divisent la taille de trame par deux.
-fn spectrum_frame(bands: &[f32]) -> String {
-    let mut payload = String::with_capacity(bands.len() * 6 + 48);
-    payload.push_str(r#"{"type":"playback.spectrum","payload":{"bands":["#);
-    for (index, band) in bands.iter().enumerate() {
-        if index > 0 {
-            payload.push(',');
-        }
-        payload.push_str(&format!("{band:.3}"));
-    }
-    payload.push_str("]}}");
-    payload
 }

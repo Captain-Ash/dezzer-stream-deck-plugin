@@ -169,23 +169,6 @@ const GLYPHS = {
     const [dx, dy] = u([0.5, 0.62]);
     c.circle(dx, dy, c.size * 0.035, PALETTE.glyph);
   },
-  "overlay-info": (c, u) => {
-    const [x1, y1] = u([0.26, 0.32]);
-    const [x2, y2] = u([0.74, 0.68]);
-    const thickness = c.size * 0.05;
-    c.roundedRect(x1, y1, x2, y2, c.size * 0.05, PALETTE.glyph);
-    c.roundedRect(
-      x1 + thickness,
-      y1 + thickness,
-      x2 - thickness,
-      y2 - thickness,
-      c.size * 0.03,
-      PALETTE.background,
-    );
-    const [bx1, by1] = u([0.34, 0.55]);
-    const [bx2, by2] = u([0.66, 0.6]);
-    c.roundedRect(bx1, by1, bx2, by2, c.size * 0.02, PALETTE.glyph);
-  },
 };
 
 function drawGlyph(size, glyph, { background = true } = {}) {
@@ -224,7 +207,6 @@ const ACTIONS = {
   "volume-up": "volume",
   "volume-down": "volume",
   diagnostics: "diagnostics",
-  "overlay-info": "overlay-info",
 };
 
 const logo = await readPng(logoPath);

@@ -1,14 +1,14 @@
 {
   "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
   "UUID": "com.dezzer.deezer",
-  "Name": "Dezzer",
-  "Version": "0.1.0.0",
+  "Name": "Deezer",
+  "Version": "0.1.1.0",
   "Author": "Captain Ash",
-  "Description": "Control Deezer Desktop from your Stream Deck and show the current track in OBS. No runtime to install. The volume actions act on Deezer's level in the Windows mixer, which combines with the app's own volume.",
-  "Category": "Dezzer",
+  "Description": "Control Deezer Desktop from your Stream Deck. No runtime to install. The volume actions act on Deezer's level in the Windows mixer, which combines with the app's own volume.",
+  "Category": "Deezer",
   "CategoryIcon": "imgs/plugin/category-icon",
   "Icon": "imgs/plugin/marketplace",
-  "URL": "https://github.com/Captain-Ash/dezzer-stream-deck-plugin",
+  "URL": "https://github.com/Captain-Ash/deezer-stream-deck-plugin",
   "CodePath": "bin/plugin.js",
   "SDKVersion": 2,
   "Software": {
@@ -138,23 +138,6 @@
       "States": [
         {
           "Image": "imgs/actions/diagnostics/key",
-          "TitleAlignment": "bottom",
-          "FontSize": 9
-        }
-      ]
-    },
-    {
-      "UUID": "com.dezzer.deezer.overlay-info",
-      "Name": "OBS overlay",
-      "Icon": "imgs/actions/overlay-info/icon",
-      "Tooltip": "Open a preview of the overlay and provide the URL to paste into OBS.",
-      "PropertyInspectorPath": "ui/property-inspector.html",
-      "Controllers": [
-        "Keypad"
-      ],
-      "States": [
-        {
-          "Image": "imgs/actions/overlay-info/key",
           "TitleAlignment": "bottom",
           "FontSize": 9
         }

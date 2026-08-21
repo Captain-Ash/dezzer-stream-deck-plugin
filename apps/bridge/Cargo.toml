@@ -3,7 +3,7 @@ name = "dezzer-bridge"
 version = "0.1.0"
 edition = "2021"
 rust-version = "1.82"
-description = "Bridge local Dezzer : expose l'etat de lecture Deezer Desktop en HTTP/WebSocket sur loopback"
+description = "Bridge local pour Deezer Desktop : expose l'etat de lecture en HTTP/WebSocket sur loopback"
 license = "LicenseRef-PolyForm-Noncommercial-1.0.0"
 publish = false
 
@@ -30,8 +30,7 @@ sha2 = "0.10"
 subtle = "2"
 thiserror = "2"
 tokio = { version = "1", features = ["rt-multi-thread", "macros", "signal", "time", "sync", "fs", "io-util"] }
-tower = "0.5"
-tower-http = { version = "0.6", features = ["fs", "set-header"] }
+tower-http = { version = "0.6", features = ["set-header"] }
 tracing = "0.1"
 tracing-appender = "0.2"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

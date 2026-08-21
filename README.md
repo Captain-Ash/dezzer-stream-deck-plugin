@@ -1,8 +1,8 @@
-# Dezzer
+# Deezer
 
 [Français](README.fr.md)
 
-A Stream Deck plugin for Deezer Desktop, with a "Now Playing" overlay for OBS.
+A Stream Deck plugin for Deezer Desktop.
 
 End users install **a single Stream Deck plugin**. No Node.js, no terminal, no service to
 start: the plugin ships and supervises a small invisible local binary.
@@ -18,21 +18,20 @@ start: the plugin ships and supervises a small invisible local binary.
 | **Volume + / -** | Adjusts Deezer's level in the Windows mixer |
 | **Now playing** | Artwork, title, artist and elapsed time; press to toggle playback |
 | **Deezer status** | Shows the local service state; press to restart it |
-| **OBS overlay** | Opens a preview of the overlay in your browser |
 
-Long titles and artist names **scroll automatically**, both on the keys and in the OBS
-overlay.
-
-The OBS overlay offers four themes, an accent colour, and an optional **live spectrum
-analyser** on the progress bar, computed from Deezer's own audio stream.
+Long titles and artist names **scroll automatically** on the keys.
 
 The plugin is available in **English and French**, following the language selected in
 Stream Deck.
 
+> **Looking for an OBS overlay?** It is a separate product:
+> [Deezer OBS Overlay](https://github.com/Captain-Ash/deezer-obs-overlay). Both run side by
+> side without interfering with each other.
+
 ## Install
 
 Download `com.dezzer.deezer.streamDeckPlugin` from the
-[latest release](https://github.com/Captain-Ash/dezzer-stream-deck-plugin/releases) and
+[latest release](https://github.com/Captain-Ash/deezer-stream-deck-plugin/releases) and
 open it. Stream Deck asks for confirmation, and that's it.
 
 See the [user guide](docs/user-guide.md) for day-to-day usage.
@@ -61,21 +60,19 @@ A trustworthy result prints `Good signature from "Captain_Ash"` with fingerprint
   unsupported, and the corresponding Windows calls have no observable effect.
 - **Volume is the Windows mixer level**, not Deezer's internal slider — Windows offers no
   way to drive an application's own volume control. Both levels multiply.
-- Volume and the spectrum analyser stay idle until Deezer has produced sound at least once,
-  because Windows only creates the audio session at that moment.
+- Volume control stays idle until Deezer has produced sound at least once, because Windows
+  only creates the audio session at that moment.
 
 ## Architecture
 
 ```text
 Stream Deck ──┐
-              │ HTTP + WebSocket on 127.0.0.1:39217, per-install token
-OBS ──────────┤
+              │ HTTP + WebSocket on 127.0.0.1, ephemeral port, per-install token
               ▼
-        dezzer-bridge (Rust binary, ~1.4 MB, windowless)
+        dezzer-bridge (Rust binary, windowless)
               │
               ├──► Windows Global Media Transport Controls  (playback, metadata)
-              ├──► Windows Core Audio                       (per-app volume)
-              └──► Application loopback capture + FFT       (spectrum analyser)
+              └──► Windows Core Audio                       (per-app volume)
                           │
                           ▼
                     Deezer Desktop
@@ -83,9 +80,8 @@ OBS ──────────┤
 
 | Folder | Role |
 |---|---|
-| `apps/bridge` | Local bridge (Rust): adapters, HTTP/WebSocket API, overlay hosting |
+| `apps/bridge` | Local bridge (Rust): adapters, HTTP/WebSocket API |
 | `apps/streamdeck-plugin` | Stream Deck plugin (TypeScript) and its Property Inspector |
-| `apps/overlay` | OBS widget (TypeScript + CSS, no external dependency) |
 | `packages/playback-contract` | Shared data contract, mirror of `apps/bridge/src/contract.rs` |
 | `scripts` | Spike, icon generation, packaging, installation |
 
@@ -97,7 +93,7 @@ Desktop, Stream Deck ≥ 6.5.
 ```powershell
 npm install
 
-npm run build          # icons + overlay + plugin + bridge (release) -> .sdPlugin
+npm run build          # icons + plugin + bridge (release) -> .sdPlugin
 npm run plugin:install # copy into Stream Deck and restart it
 npm run pack           # produce dist/com.dezzer.deezer.streamDeckPlugin
 
@@ -108,7 +104,7 @@ npm run typecheck
 Working without Deezer running:
 
 ```powershell
-$env:DEZZER_BRIDGE_ADAPTER = "mock"
+$env:DEEZER_BRIDGE_ADAPTER = "mock"
 npm run bridge:dev
 ```
 
@@ -137,7 +133,7 @@ replaced before any submission to the Stream Deck Marketplace.
 [PolyForm Noncommercial 1.0.0](LICENSE) — free to use, modify and share for any
 **noncommercial** purpose.
 
-Commercial use is not granted by this licence. Selling Dezzer, bundling it with a paid
+Commercial use is not granted by this licence. Selling Deezer, bundling it with a paid
 product or service, or monetising a derivative work requires prior written permission from
 Captain Ash.
 

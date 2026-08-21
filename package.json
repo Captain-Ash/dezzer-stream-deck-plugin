@@ -1,22 +1,21 @@
 {
   "name": "dezzer",
   "private": true,
-  "version": "0.1.0",
-  "description": "Dezzer — plugin Stream Deck Deezer + overlay OBS",
+  "version": "0.1.1",
+  "description": "Plugin Stream Deck pour Deezer Desktop",
   "author": "Captain Ash",
   "license": "SEE LICENSE IN LICENSE",
-  "homepage": "https://github.com/Captain-Ash/dezzer-stream-deck-plugin#readme",
+  "homepage": "https://github.com/Captain-Ash/deezer-stream-deck-plugin#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Captain-Ash/dezzer-stream-deck-plugin.git"
+    "url": "git+https://github.com/Captain-Ash/deezer-stream-deck-plugin.git"
   },
   "bugs": {
-    "url": "https://github.com/Captain-Ash/dezzer-stream-deck-plugin/issues"
+    "url": "https://github.com/Captain-Ash/deezer-stream-deck-plugin/issues"
   },
   "workspaces": [
     "packages/*",
-    "apps/streamdeck-plugin",
-    "apps/overlay"
+    "apps/streamdeck-plugin"
   ],
   "engines": {
     "node": ">=20"

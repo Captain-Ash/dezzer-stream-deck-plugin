@@ -165,7 +165,7 @@ export function nowPlayingKey(key: NowPlayingKey): string {
 }
 
 export interface GlyphKey {
-  glyph: "play" | "pause" | "next" | "previous" | "volume-up" | "volume-down" | "diagnostics" | "overlay";
+  glyph: "play" | "pause" | "next" | "previous" | "volume-up" | "volume-down" | "diagnostics";
   mood: KeyMood;
   artwork?: Artwork;
 }
@@ -196,9 +196,6 @@ const GLYPHS: Record<GlyphKey["glyph"], (colour: string) => string> = {
   diagnostics: (c) =>
     `<circle cx="72" cy="72" r="30" fill="none" stroke="${c}" stroke-width="8"/>` +
     `<rect x="67" y="54" width="10" height="24" rx="5" fill="${c}"/><circle cx="72" cy="88" r="6" fill="${c}"/>`,
-  overlay: (c) =>
-    `<rect x="38" y="48" width="68" height="48" rx="8" fill="none" stroke="${c}" stroke-width="7"/>` +
-    `<rect x="50" y="80" width="44" height="7" rx="3.5" fill="${c}"/>`,
 };
 
 /** Touche de repli quand rien n'est disponible : glyphe grisé et libellé court. */

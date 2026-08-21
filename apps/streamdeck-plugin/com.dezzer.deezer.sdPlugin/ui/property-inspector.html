@@ -2,7 +2,7 @@
 <html lang="fr">
   <head>
     <meta charset="utf-8" />
-    <title>Dezzer</title>
+    <title>Deezer</title>
     <style>
       :root {
         color-scheme: dark;
@@ -217,67 +217,10 @@
       </div>
     </div>
 
-    <h2 data-i18n="pi.overlay">Overlay OBS</h2>
+    <h2 data-i18n="pi.session">Session</h2>
     <div class="panel">
-      <div class="row">
-        <label data-i18n="pi.theme">Thème</label>
-        <select id="theme">
-          <option value="glass">Glass</option>
-          <option value="minimal">Minimal</option>
-          <option value="neon">Neon</option>
-          <option value="broadcast">Broadcast</option>
-        </select>
-      </div>
-      <div class="row">
-        <label data-i18n="pi.width">Largeur (px)</label>
-        <input type="number" id="width" min="400" max="1200" step="10" />
-      </div>
-      <div class="row">
-        <label data-i18n="pi.accent">Couleur d'accent</label>
-        <input type="text" id="accent" data-i18n-placeholder="pi.accentPlaceholder" placeholder="#a238ff (vide = thème)" />
-      </div>
-      <div class="row">
-        <label data-i18n="pi.artwork">Pochette</label>
-        <input type="checkbox" id="showArtwork" />
-      </div>
-      <div class="row">
-        <label data-i18n="pi.album">Album</label>
-        <input type="checkbox" id="showAlbum" />
-      </div>
-      <div class="row">
-        <label data-i18n="pi.time">Temps</label>
-        <input type="checkbox" id="showTime" />
-      </div>
-      <div class="row">
-        <label data-i18n="pi.waveform">Waveform</label>
-        <input type="checkbox" id="waveform" />
-      </div>
-      <div class="row">
-        <label data-i18n="pi.autoHide">Masquage auto</label>
-        <input type="checkbox" id="autoHide" />
-      </div>
-      <div class="row">
-        <label data-i18n="pi.hideAfter">Après (ms)</label>
-        <input type="number" id="hideAfterMs" min="1000" max="600000" step="500" />
-      </div>
-
-      <div class="row">
-        <label data-i18n="pi.browserSourceUrl">URL Browser Source</label>
-        <div class="url" id="overlay-url">—</div>
-      </div>
-      <div class="row">
-        <label data-i18n="pi.revealUrl">Afficher l'URL</label>
-        <input type="checkbox" id="reveal" />
-      </div>
       <div class="buttons">
-        <button class="primary" id="copy" data-i18n="pi.copyUrl">Copier l'URL</button>
-        <button id="preview" data-i18n="pi.preview">Aperçu navigateur</button>
         <button id="rotate" data-i18n="pi.rotateToken">Régénérer le jeton</button>
-      </div>
-      <div class="hint" data-i18n="pi.obsHint">
-        Dans OBS : ajoutez une source <strong>Navigateur</strong>, collez l'URL, puis réglez la
-        taille sur <strong>720 × 160</strong>. Le port est fixe : l'URL reste valable après un
-        redémarrage.
       </div>
     </div>
 
@@ -427,70 +370,15 @@
           $("caps").appendChild(chip);
         }
 
-        // Le bridge republie cet etat plusieurs fois par seconde pendant la lecture : ne pas
-        // ecraser un champ que l'utilisateur est en train d'editer (sinon la frappe est perdue).
-        const overlay = payload.overlay || {};
-        const setUnlessFocused = (id, apply) => {
-          if (document.activeElement !== $(id)) apply();
-        };
-        setUnlessFocused("theme", () => ($("theme").value = overlay.theme || "glass"));
-        setUnlessFocused("width", () => ($("width").value = overlay.width || 720));
-        setUnlessFocused("accent", () => ($("accent").value = overlay.accent || ""));
-        setUnlessFocused("showArtwork", () => ($("showArtwork").checked = overlay.showArtwork !== false));
-        setUnlessFocused("showAlbum", () => ($("showAlbum").checked = Boolean(overlay.showAlbum)));
-        setUnlessFocused("showTime", () => ($("showTime").checked = overlay.showTime !== false));
-        setUnlessFocused("waveform", () => ($("waveform").checked = Boolean(overlay.waveform)));
-        setUnlessFocused("autoHide", () => ($("autoHide").checked = Boolean(overlay.autoHide)));
-        setUnlessFocused("hideAfterMs", () => ($("hideAfterMs").value = overlay.hideAfterMs || 10000));
-
-        renderUrl();
         $("diagnostic-export").value = JSON.stringify(
           {
             plugin: payload.environment,
             bridge: payload.bridge,
             player: payload.player,
-            overlay: overlay,
           },
           null,
           2,
         );
-      }
-
-      function renderUrl() {
-        const url = latest && latest.overlayUrl;
-        if (!url) {
-          $("overlay-url").textContent = T("pi.serviceUnavailable", "Service local indisponible");
-          return;
-        }
-        $("overlay-url").textContent = $("reveal").checked ? url : url.replace(/token=[^&]+/, "token=••••••••");
-      }
-
-      function readOverlayForm() {
-        return {
-          theme: $("theme").value,
-          width: Number($("width").value),
-          accent: $("accent").value.trim(),
-          showArtwork: $("showArtwork").checked,
-          showAlbum: $("showAlbum").checked,
-          showTime: $("showTime").checked,
-          waveform: $("waveform").checked,
-          autoHide: $("autoHide").checked,
-          hideAfterMs: Number($("hideAfterMs").value),
-        };
-      }
-
-      for (const id of [
-        "theme",
-        "width",
-        "accent",
-        "showArtwork",
-        "showAlbum",
-        "showTime",
-        "waveform",
-        "autoHide",
-        "hideAfterMs",
-      ]) {
-        $(id).addEventListener("change", () => send({ action: "saveOverlay", overlay: readOverlayForm() }));
       }
 
       $("now-playing-format").addEventListener("change", () =>
@@ -502,17 +390,12 @@
       $("volumeStep").addEventListener("change", () =>
         setGlobal({ volumeStep: Number($("volumeStep").value) }),
       );
-      $("reveal").addEventListener("change", renderUrl);
       $("test").addEventListener("click", () => send({ action: "getState" }));
       $("restart").addEventListener("click", () => send({ action: "restartBridge" }));
-      $("preview").addEventListener("click", () => send({ action: "openOverlay" }));
       $("rotate").addEventListener("click", () => {
-        if (confirm(T("pi.rotateConfirm", "Régénérer le jeton ? L'URL actuelle cessera de fonctionner."))) {
+        if (confirm(T("pi.rotateConfirm", "Régénérer le jeton ? Le service local redémarre."))) {
           send({ action: "rotateToken" });
         }
-      });
-      $("copy").addEventListener("click", () => {
-        if (latest && latest.overlayUrl) navigator.clipboard.writeText(latest.overlayUrl);
       });
       $("copy-diagnostic").addEventListener("click", () =>
         navigator.clipboard.writeText($("diagnostic-export").value),

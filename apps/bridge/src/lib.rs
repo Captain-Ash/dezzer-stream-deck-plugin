@@ -1,13 +1,11 @@
-//! Bridge Dezzer : point d'entrée bibliothèque, réutilisé par le binaire et les tests.
+//! Bridge Deezer : point d'entrée bibliothèque, réutilisé par le binaire et les tests.
 
 pub mod adapters;
 pub mod api;
 pub mod config;
 pub mod contract;
-pub mod levels;
 pub mod logging;
 pub mod runtime;
-pub mod spectrum;
 pub mod store;
 
 use std::net::{Ipv4Addr, SocketAddr};
@@ -68,14 +66,6 @@ impl Bridge {
         let addr = listener.local_addr()?;
         app_state.set_port(addr.port());
 
-        if config.port != 0 && addr.port() != config.port {
-            tracing::warn!(
-                souhaite = config.port,
-                obtenu = addr.port(),
-                "port par defaut indisponible : l'URL de l'overlay a change"
-            );
-        }
-
         let runtime_file = RuntimeFile::write(
             &config.data_dir,
             &RuntimeInfo {
@@ -102,8 +92,7 @@ impl Bridge {
     /// Sert l'API jusqu'à l'arrêt demandé (Ctrl+C, disparition du parent, ou `shutdown`).
     pub async fn serve(self) -> Result<()> {
         let state = self.state.clone();
-        let overlay_dir = state.config.overlay_dir.clone();
-        let router = api::router(state.clone(), &overlay_dir);
+        let router = api::router(state.clone());
 
         state.store.publish(BridgeEvent::Ready {
             version: VERSION.to_string(),
@@ -147,28 +136,12 @@ impl Bridge {
     }
 }
 
-/// Écoute exclusivement sur la boucle locale (§2.2), en préférant le port fixe pour que
-/// l'URL collée dans OBS reste valable d'un démarrage à l'autre.
+/// Écoute exclusivement sur la boucle locale (§2.2). Le port est éphémère par défaut ;
+/// un numéro explicite n'est utilisé que si l'environnement en impose un.
 async fn bind_loopback(port: u16) -> Result<tokio::net::TcpListener> {
-    if port == 0 {
-        return tokio::net::TcpListener::bind(SocketAddr::from((Ipv4Addr::LOCALHOST, 0)))
-            .await
-            .context("ecoute sur un port ephemere");
-    }
-
-    for offset in 0..config::PORT_FALLBACK_ATTEMPTS {
-        let candidate = port.saturating_add(offset);
-        match tokio::net::TcpListener::bind(SocketAddr::from((Ipv4Addr::LOCALHOST, candidate)))
-            .await
-        {
-            Ok(listener) => return Ok(listener),
-            Err(error) => tracing::debug!(port = candidate, %error, "port indisponible"),
-        }
-    }
-
-    tokio::net::TcpListener::bind(SocketAddr::from((Ipv4Addr::LOCALHOST, 0)))
+    tokio::net::TcpListener::bind(SocketAddr::from((Ipv4Addr::LOCALHOST, port)))
         .await
-        .context("aucun port fixe disponible, et l'attribution ephemere a echoue")
+        .with_context(|| format!("ecoute sur 127.0.0.1:{port}"))
 }
 
 async fn shutdown_signal(parent_pid: Option<u32>) -> String {

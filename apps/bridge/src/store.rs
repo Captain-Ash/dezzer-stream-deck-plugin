@@ -97,7 +97,7 @@ impl PlaybackStore {
     ///
     /// L'état interrogeable est toujours rafraîchi — sinon `GET /v1/state` renverrait une
     /// position figée — mais un événement n'est diffusé que sur changement significatif,
-    /// afin de ne pas inonder l'overlay pendant la lecture.
+    /// afin de ne pas inonder le plugin pendant la lecture.
     ///
     /// Retourne `true` si un événement a été diffusé.
     pub fn apply(&self, snapshot: PlaybackSnapshot) -> bool {

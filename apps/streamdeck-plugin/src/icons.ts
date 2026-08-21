@@ -80,12 +80,3 @@ export function diagnosticsIcon(mood: KeyMood = "idle"): string {
 <circle cx="72" cy="82" r="6" fill="${glyph}"/>`,
   );
 }
-
-export function overlayIcon(mood: KeyMood = "idle"): string {
-  const { glyph } = COLOURS[mood];
-  return wrap(
-    mood,
-    `<rect x="40" y="44" width="64" height="44" rx="7" fill="none" stroke="${glyph}" stroke-width="7"/>
-<rect x="50" y="72" width="44" height="7" rx="3.5" fill="${glyph}"/>`,
-  );
-}

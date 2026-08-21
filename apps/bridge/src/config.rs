@@ -7,24 +7,19 @@ use std::path::PathBuf;
 
 use anyhow::{bail, Context, Result};
 
-pub const ENV_TOKEN: &str = "DEZZER_BRIDGE_TOKEN";
-pub const ENV_ADAPTER: &str = "DEZZER_BRIDGE_ADAPTER";
-pub const ENV_PORT: &str = "DEZZER_BRIDGE_PORT";
-pub const ENV_OVERLAY_DIR: &str = "DEZZER_BRIDGE_OVERLAY_DIR";
-pub const ENV_DATA_DIR: &str = "DEZZER_BRIDGE_DATA_DIR";
-pub const ENV_LOG_LEVEL: &str = "DEZZER_BRIDGE_LOG_LEVEL";
-pub const ENV_PARENT_PID: &str = "DEZZER_BRIDGE_PARENT_PID";
+pub const ENV_TOKEN: &str = "DEEZER_BRIDGE_TOKEN";
+pub const ENV_ADAPTER: &str = "DEEZER_BRIDGE_ADAPTER";
+pub const ENV_PORT: &str = "DEEZER_BRIDGE_PORT";
+pub const ENV_DATA_DIR: &str = "DEEZER_BRIDGE_DATA_DIR";
+pub const ENV_LOG_LEVEL: &str = "DEEZER_BRIDGE_LOG_LEVEL";
+pub const ENV_PARENT_PID: &str = "DEEZER_BRIDGE_PARENT_PID";
 
-/// Port fixe par défaut.
+/// Port par défaut : `0`, c'est-à-dire un port éphémère attribué par le système.
 ///
-/// Un port éphémère obligerait à recoller l'URL dans OBS à chaque redémarrage. Cette
-/// valeur est hors de la plage éphémère de Windows (49152-65535), hors des plages
-/// exclues par HTTP.sys, et non attribuée par l'IANA.
-pub const DEFAULT_PORT: u16 = 39_217;
-
-/// Ports essayés successivement si le port par défaut est pris. Le dernier recours est un
-/// port éphémère : le bridge reste utilisable, au prix d'une URL d'overlay à recoller.
-pub const PORT_FALLBACK_ATTEMPTS: u16 = 5;
+/// Le plugin lit le port réel dans le fichier de disponibilité : rien ne justifie de
+/// réserver un numéro fixe, qui risquerait au contraire d'entrer en conflit avec un autre
+/// programme déjà installé sur la machine.
+pub const DEFAULT_PORT: u16 = 0;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum AdapterKind {
@@ -49,9 +44,8 @@ impl AdapterKind {
 pub struct Config {
     pub token: String,
     pub adapter: AdapterKind,
-    /// Port souhaité. `0` demande explicitement un port éphémère.
+    /// Port souhaité. `0` demande un port éphémère.
     pub port: u16,
-    pub overlay_dir: PathBuf,
     pub data_dir: PathBuf,
     pub log_level: String,
     /// Si renseigné, le bridge s'arrête peu après la disparition de ce processus.
@@ -87,15 +81,6 @@ impl Config {
             _ => DEFAULT_PORT,
         };
 
-        let exe_dir = std::env::current_exe()
-            .ok()
-            .and_then(|p| p.parent().map(PathBuf::from))
-            .unwrap_or_else(|| PathBuf::from("."));
-
-        let overlay_dir = std::env::var_os(ENV_OVERLAY_DIR)
-            .map(PathBuf::from)
-            .unwrap_or_else(|| exe_dir.join("overlay"));
-
         let data_dir = std::env::var_os(ENV_DATA_DIR)
             .map(PathBuf::from)
             .unwrap_or_else(default_data_dir);
@@ -114,7 +99,6 @@ impl Config {
             token,
             adapter,
             port,
-            overlay_dir,
             data_dir,
             log_level,
             parent_pid,
@@ -129,7 +113,7 @@ pub fn default_data_dir() -> PathBuf {
         .or_else(|| std::env::var_os("XDG_DATA_HOME").map(PathBuf::from))
         .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".local/share")))
         .unwrap_or_else(std::env::temp_dir);
-    base.join("Dezzer")
+    base.join("Deezer")
 }
 
 pub fn generate_token() -> String {
@@ -160,14 +144,10 @@ mod tests {
     }
 
     #[test]
-    fn le_port_par_defaut_evite_la_plage_ephemere_de_windows() {
-        assert!(
-            DEFAULT_PORT < 49_152,
-            "un port dans la plage ephemere pourrait etre pris par un autre programme"
-        );
-        assert!(
-            DEFAULT_PORT > 1_024,
-            "un port privilegie exigerait des droits admin"
+    fn le_port_par_defaut_est_ephemere() {
+        assert_eq!(
+            DEFAULT_PORT, 0,
+            "le port doit etre attribue par le systeme : le plugin le lit dans le fichier de disponibilite"
         );
     }
 }

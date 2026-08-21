@@ -1,7 +1,7 @@
 {
-  "Name": "Dezzer",
-  "Description": "Control Deezer Desktop from your Stream Deck and show the current track in OBS. No runtime to install. The volume actions act on Deezer's level in the Windows mixer, which combines with the app's own volume.",
-  "Category": "Dezzer",
+  "Name": "Deezer",
+  "Description": "Control Deezer Desktop from your Stream Deck. No runtime to install. The volume actions act on Deezer's level in the Windows mixer, which combines with the app's own volume.",
+  "Category": "Deezer",
   "com.dezzer.deezer.play-pause": {
     "Name": "Play / Pause",
     "Tooltip": "Toggle playback in Deezer Desktop."
@@ -30,10 +30,6 @@
     "Name": "Deezer status",
     "Tooltip": "Show the status of the local service and of Deezer. Press to restart the service."
   },
-  "com.dezzer.deezer.overlay-info": {
-    "Name": "OBS overlay",
-    "Tooltip": "Open a preview of the overlay and provide the URL to paste into OBS."
-  },
   "Localization": {
     "key": {
       "starting": "Starting…",
@@ -45,8 +41,7 @@
       "unsupported": "Not\nsupported",
       "unavailable": "Unavailable",
       "unavailableShort": "N/A",
-      "restarting": "Restarting…",
-      "overlay": "OBS\noverlay"
+      "restarting": "Restarting…"
     },
     "diagnostic": {
       "starting": "Starting the local service…",
@@ -79,24 +74,8 @@
       "artworkOnKeys": "Artwork background",
       "volumeStep": "Volume step",
       "volumeHint": "The Volume actions act on Deezer's slider in the Windows mixer, not inside Deezer. Both levels combine: 50 % on each side gives 25 % of the sound.",
-      "overlay": "OBS overlay",
-      "theme": "Theme",
-      "width": "Width (px)",
-      "accent": "Accent colour",
-      "accentPlaceholder": "#a238ff (empty = theme)",
-      "artwork": "Artwork",
-      "album": "Album",
-      "time": "Time",
-      "waveform": "Waveform",
-      "autoHide": "Auto-hide",
-      "hideAfter": "After (ms)",
-      "browserSourceUrl": "Browser Source URL",
-      "revealUrl": "Reveal URL",
-      "copyUrl": "Copy URL",
-      "preview": "Preview in browser",
       "rotateToken": "Regenerate token",
-      "rotateConfirm": "Regenerate the token? The current URL will stop working and must be pasted again into OBS.",
-      "obsHint": "In OBS: add a Browser source, paste the URL, then set the size to 720 × 160. The port is fixed, so the URL stays valid after a restart.",
+      "rotateConfirm": "Regenerate the token? The local service restarts immediately.",
       "diagnosticExport": "Exportable diagnostic",
       "copyDiagnostic": "Copy diagnostic",
       "diagnosticHint": "Contains no token. Paste it as-is into a bug report.",
